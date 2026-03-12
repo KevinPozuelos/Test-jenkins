@@ -15,7 +15,7 @@ pipeline {
         stage('Clone') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/KevinPozuelos/Laboratorio-SA-S12026-B.git'
+                    url: 'https://github.com/KevinPozuelos/Test-jenkins.git'
             }
         }
 
