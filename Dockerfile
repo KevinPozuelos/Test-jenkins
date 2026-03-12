@@ -1,46 +1,32 @@
-# Dependencias
-FROM node:24.11.0-alpine3.19 AS deps
+# ---------- Dependencias ----------
+FROM node:18-alpine AS deps
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY package*.json ./
 
 RUN npm install
 
-# Builder - Construye la aplicación
-FROM node:22.11.0-alpine3.19 AS build
+# ---------- Build ----------
+FROM node:18-alpine AS build
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copiar de deps, los módulos de node
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-
-# Copiar todo el codigo fuente de la aplicación
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# RUN npm run test
 RUN npm run build
 
-RUN npm ci -f --only=production && npm cache clean --force
+# ---------- Producción ----------
+FROM node:18-alpine AS prod
 
-# Crear la imagen final de Docker
-FROM node:21-alpine3.19 AS prod
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
-
-COPY --from=build /usr/src/app/node_modules ./node_modules
-
-# Copiar la carpeta de DIST
-COPY --from=build /usr/src/app/dist ./dist
-
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
 
 ENV NODE_ENV=production
 
-USER node
-
-
 EXPOSE 3000
 
-CMD [ "node", "dist/main.js" ]
+CMD ["node", "dist/main.js"]
