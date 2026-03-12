@@ -21,19 +21,25 @@ pipeline {
 
         stage('Install') {
             steps {
-                sh 'npm install'
-            }
+                dir('Test-jenkins') {
+                    sh 'npm install'
         }
+    }
+}
 
         stage('Build Nest (CI)') {
             steps {
-                sh 'npm run build'
-            }
+                dir('Test-jenkins') {
+                    sh 'npm run build'
         }
+    }
+}
 
         stage('Test (CI)') {
             steps {
-                sh 'npm run test || true'
+                dir('Test-jenkins') {
+                    sh 'npm run test || true'
+                }
             }
         }
 
