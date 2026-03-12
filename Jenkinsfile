@@ -14,7 +14,8 @@ pipeline {
 
         stage('Clone') {
             steps {
-                git 'https://github.com/KevinPozuelos/Laboratorio-SA-S12026-B.git'
+                git branch: 'main',
+                    url: 'https://github.com/KevinPozuelos/Laboratorio-SA-S12026-B.git'
             }
         }
 
