@@ -12,44 +12,25 @@ pipeline {
 
     stages {
 
-        stage('Clone') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/KevinPozuelos/Test-jenkins.git'
-            }
-        }
-
         stage('Install') {
             steps {
-                dir('Test-jenkins') {
-                    sh 'npm install'
-        }
-    }
-}
-
-        stage('Build Nest (CI)') {
-            steps {
-                dir('Test-jenkins') {
-                    sh 'npm run build'
-        }
-    }
-}
-
-        stage('Test (CI)') {
-            steps {
-                dir('Test-jenkins') {
-                    sh 'npm run test || true'
-                }
+                sh 'npm install'
             }
         }
 
-        stage('Docker Build (CD)') {
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Docker Build') {
             steps {
                 sh 'docker build -t $IMAGE:$TAG .'
             }
         }
 
-        stage('Push Docker Hub (CD)') {
+        stage('Push') {
             steps {
                 sh 'docker push $IMAGE:$TAG'
             }
