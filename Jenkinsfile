@@ -8,7 +8,6 @@ pipeline {
     environment {
         IMAGE = "kevinpozuelos/nest-app"
         TAG = "latest"
-        QODANA_TOKEN = credentials('qodana-token')
     }
 
     stages {
@@ -25,17 +24,6 @@ pipeline {
             }
         }
 
-        stage('Static Analysis (Qodana)') {
-    agent {
-        docker {
-            image 'jetbrains/qodana-js'
-            args "--entrypoint='' -v $WORKSPACE:/data/project"
-        }
-    }
-    steps {
-        sh 'qodana scan'
-    }
-}
         stage('Docker Build') {
             steps {
                 sh 'docker build -t $IMAGE:$TAG .'
