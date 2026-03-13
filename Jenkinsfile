@@ -8,6 +8,7 @@ pipeline {
     environment {
         IMAGE = "kevinpozuelos/nest-app"
         TAG = "latest"
+        QODANA_TOKEN = credentials('qodana-token')
     }
 
     stages {
@@ -32,7 +33,7 @@ pipeline {
         }
     }
     steps {
-        sh 'qodana'
+        sh 'qodana scan'
     }
 }
         stage('Docker Build') {
