@@ -36,7 +36,7 @@ export class EstudianteService {
   }
 
 
-  async cargarDesdeCSV(file: Express.Multer.File) {
+  async cargarDesdeCSVa(file: Express.Multer.File) {
     try {
       const estudiantes: DeepPartial<Estudiante>[] = [];
 
