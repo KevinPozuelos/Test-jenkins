@@ -25,17 +25,16 @@ pipeline {
         }
 
         stage('Static Analysis (Qodana)') {
-            agent {
-                docker {
-                    image 'jetbrains/qodana-js'
-                    args '-v $WORKSPACE:/data/project'
-                }
-            }
-            steps {
-                sh 'qodana'
-            }
+    agent {
+        docker {
+            image 'jetbrains/qodana-js'
+            args "--entrypoint='' -v $WORKSPACE:/data/project"
         }
-
+    }
+    steps {
+        sh 'qodana'
+    }
+}
         stage('Docker Build') {
             steps {
                 sh 'docker build -t $IMAGE:$TAG .'
