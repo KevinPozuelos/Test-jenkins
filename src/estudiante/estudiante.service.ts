@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,10 @@ import csv from 'csv-parser';
 
 @Injectable()
 export class EstudianteService {
+
+  private readonly logger = new Logger(EstudianteService.name);
+
+
 
   constructor(
     @InjectRepository(Estudiante)
@@ -70,7 +74,10 @@ export class EstudianteService {
 
   async findOne(id: string) {
 
+
+
     if (!id) {
+      this.logger.error('Ocurrió un error');
       throw new BadRequestException('Carnet es requerido');
     }
 
@@ -79,8 +86,14 @@ export class EstudianteService {
     });
 
     if (!estudiante) {
+      
+      this.logger.warn('Esto es una advertencia');
       throw new NotFoundException(`No existe estudiante con carnet ${id}`);
     }
+
+    this.logger.log('Obteniendo usuarios');
+    
+    
 
     return estudiante;
   }
